@@ -3,8 +3,9 @@
 (ns network
   (:require [babashka.process :as p]
             [clojure.java.shell :refer [sh]]
-            [clojure.string :as s]
-            [clojure.string :as str]))
+            [clojure.string :as s]))
+
+(def vpn-theme-file "~/Dev/rofi_scripts/themes/vpn.rasi")
 
 ;;;; WIFI
 
@@ -36,13 +37,9 @@
 (defn get-active-vpn-name []
   (some #(when (= "*" (first %)) (second %)) (get-wireguard-connections)))
 
-(defn get-active-vpn-index []
-  (loop [connections (get-wireguard-connections) 
-         idx 0]
-    (if (= "*" (first (first connections)))
-      idx
-      (when (not-empty connections)
-        (recur (rest connections) (inc idx))))))
+(defn get-active-vpn-indexes []
+  (let [connections (get-wireguard-connections)]
+    (keep-indexed #(when (= "*" (first %2)) %1) connections)))
 
 (defn activate-vpn [region]
   (zero? (:exit (sh "nmcli" "connection" "up" region))))
@@ -59,10 +56,10 @@
 
 (defn rofi-select []
   (let [connections (get-wireguard-connections)
-        active-connection-index (get-active-vpn-index)
-        cli ["rofi" "-dmenu" "-p" "Select VPN:" "-theme" "./themes/vpn.rasi"]
-        result (p/shell (if active-connection-index
-                          (concat cli ["-a" active-connection-index])
+        active-connection-indexes (get-active-vpn-indexes)
+        cli ["rofi" "-dmenu" "-p" "Select VPN:" "-theme" vpn-theme-file]
+        result (p/shell (if-not (empty?   active-connection-indexes)
+                          (concat cli ["-a" (s/join "," active-connection-indexes)])
                           cli)
                         {:in (s/join "\n" (map second connections))
                          :out :string
@@ -74,10 +71,13 @@
 ;;;; MAIN
 
 (defn -main []
-  (let [{:keys [exit selection]} (rofi-select)]
-    (case exit
-      0 (toggle-vpn selection)
-      1 (println "Cancelled")
-      (println "Rofi exited with code:" exit))))
+  (loop []
+    (let [{:keys [exit selection]} (rofi-select)]
+      (case exit
+        0 (do
+            (toggle-vpn selection)
+            (recur))
+        1 (println "Cancelled")
+        (println "Rofi exited with code:" exit)))))
 
 (apply -main *command-line-args*)
