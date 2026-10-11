@@ -3,6 +3,7 @@
 (ns vpn
   (:require [clojure.java.shell :refer [sh]]
             [clojure.string :as s]
+            [shared :refer [theme-file]]
             [utils :refer [run-nmcli-list-command rofi-select]]))
 
 (defn get-wireguard-connections
@@ -38,7 +39,6 @@
     (deactivate-vpn region)
     (activate-vpn region)))
 
-(def theme-file "./themes/network.rasi")
 (def show-vpn-cli ["rofi" "-dmenu" "-p" "Select VPN:" "-theme" theme-file])
 
 (defn main-rofi []

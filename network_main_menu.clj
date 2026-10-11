@@ -3,10 +3,9 @@
 (ns network-main-menu
   (:require [clojure.string :as s]
             [utils :refer [rofi-select]]
+            [shared :refer [theme-file]]
             [vpn :as vpn]
             [wifi :as wifi]))
-
-(def theme-file "./themes/network.rasi")
 
 (def vpn-str "VPN")
 (def wifi-str "Wi-Fi")

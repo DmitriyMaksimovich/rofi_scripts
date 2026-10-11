@@ -4,10 +4,10 @@
   (:require [clojure.string :as s]
             [clojure.java.shell :refer [sh]]
             [babashka.process :as p]
+            [shared :refer [theme-file]]
             [utils :refer [run-nmcli-list-command rofi-select]]))
 
 (def max-connections-to-display 10)
-(def theme-file "./themes/network.rasi")
 (def show-wifi-cli ["rofi" "-dmenu" "-p" "Select Wi-Fi:"
                     "-theme" theme-file "-theme-str" "element-text { horizontal-align: 0; }"])
 
