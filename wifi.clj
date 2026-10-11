@@ -11,9 +11,6 @@
 (def show-wifi-cli ["rofi" "-dmenu" "-p" "Select Wi-Fi:"
                     "-theme" theme-file "-theme-str" "element-text { horizontal-align: 0; }"])
 
-(defn get-all-active-connections []
-  (run-nmcli-list-command (sh "nmcli" "-t" "-f" "NAME,TYPE,DEVICE" "connection" "show")))
-
 (defn list-wifi []
   (run-nmcli-list-command (sh "nmcli" "-t" "-f" "IN-USE,SSID,BAND,BARS" "device" "wifi" "list")))
 
@@ -81,7 +78,7 @@
         formatted-connections (map format-wifi-entry named-connections)
         connections (s/join "\n" formatted-connections)
         lines (max (count formatted-connections) max-connections-to-display)
-        active-index (get-active-wifi-index wifi-connections)
+        active-index (get-active-wifi-index named-connections)
         cli-lines (conj show-wifi-cli "-theme-str" (str "listview { lines: " lines "; }"))
         cli (if active-index
               (concat cli-lines ["-a" active-index])
