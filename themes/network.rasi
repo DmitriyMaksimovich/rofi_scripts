@@ -1,6 +1,7 @@
 /*****----- Configuration -----*****/
 configuration {
-    show-icons:                 false;
+    show-icons: false;
+    sidebar-mode: true;
 }
 
 /*****----- Global Properties -----*****/
@@ -36,7 +37,7 @@ mainbox {
     margin:                      0px;
     padding:                     20px;
     background-color:            transparent;
-    children:                    [ "inputbar", "message", "listview" ];
+    children:                    ["inputbar", "mode-switcher", "message", "listview"];
 }
 
 /*****----- Inputbar -----*****/
@@ -49,7 +50,18 @@ inputbar {
     border-color:                @selected;
     background-color:            transparent;
     text-color:                  @foreground;
-    children:                    [ "textbox-prompt-colon", "prompt"];
+    children:                    [ "textbox-prompt-colon", "prompt", "entry"];
+}
+
+entry {
+    enabled:                     true;
+    padding:                     6px 10px;
+    border-radius:               0px;
+    background-color:            @background-alt;
+    text-color:                  @foreground;
+    cursor:                      text;
+    placeholder:                 "Type here...";
+    placeholder-color:           @foreground;
 }
 
 textbox-prompt-colon {
@@ -137,4 +149,20 @@ element selected.active {
     text-color: var(background);
     border: 5px solid;
     border-color: @urgent;
+}
+
+/*****----- Sidebar -----*****/
+mode-switcher {
+    background-color: inherit;
+}
+
+button {
+    padding: 10px;
+    background-color: var(background-alt);
+    text-color: var(foreground);
+}
+
+button selected {
+    background-color: var(selected);
+    text-color: var(background);
 }

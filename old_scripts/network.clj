@@ -5,7 +5,7 @@
             [clojure.java.shell :refer [sh]]
             [clojure.string :as s]))
 
-(def vpn-theme-file "~/Dev/rofi_scripts/themes/vpn.rasi")
+(def vpn-theme-file "~/Dev/rofi_scripts/themes/network.rasi")
 
 ;;;; WIFI
 
