@@ -77,7 +77,7 @@
         named-connections (filter #(not-empty (:name %)) wifi-connections) ;; drop connections without name
         formatted-connections (map format-wifi-entry named-connections)
         connections (s/join "\n" formatted-connections)
-        lines (max (count formatted-connections) max-connections-to-display)
+        lines (min (count formatted-connections) max-connections-to-display)
         active-index (get-active-wifi-index named-connections)
         cli-lines (conj show-wifi-cli "-theme-str" (str "listview { lines: " lines "; }"))
         cli (if active-index
